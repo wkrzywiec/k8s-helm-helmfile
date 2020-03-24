@@ -157,6 +157,8 @@ Events:
 
 ### References
 
+https://severalnines.com/database-blog/using-kubernetes-deploy-postgresql
+
 https://kubernetes.io/docs/reference/kubectl/overview/
 https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
 https://stackoverflow.com/questions/47369351/kubectl-apply-vs-kubectl-create
