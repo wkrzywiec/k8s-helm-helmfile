@@ -4,15 +4,18 @@ metadata:
   name: postgres
   labels:
     app: postgres
+    type: db
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: postgres
+      type: db
   template:
     metadata:
       labels:
         app: postgres
+        type: db
     spec:
       volumes:
         - name: postgres-storage
@@ -23,6 +26,9 @@ spec:
           image: postgres:9.6-alpine
           ports:
             - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgres-configmap
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
