@@ -42,7 +42,7 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
 ### 2. Add postgres & pgAdmin services
 
-First create **PeristentVolumeClaim** using `postgres-pvc.yaml` file. And then apply it:
+First create [**PeristentVolumeClaim**](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) using `postgres-pvc.yaml` file. And then apply it:
 ```bash
 $ kubectl apply -f postgres-pvc.yaml
 persistentvolumeclaim/postgres-persistent-volume-claim created
@@ -52,7 +52,7 @@ NAME                               STATUS   VOLUME                              
 postgres-persistent-volume-claim   Bound    pvc-f5d9b781-9cdf-4a4c-8c9b-2edb8330d139   4Gi        RWO            standard       10s
 ```
 
-Next create a **ConfigMap** that will hold all database credentials - `postgres-configmap.yaml`:
+Next create a [**ConfigMap**](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/) that will hold all database credentials - `postgres-configmap.yaml`:
 ```bash
 $ kubectl apply -f postgres-configmap.yaml
 
@@ -61,7 +61,7 @@ NAME              DATA   AGE
 postgres-config   3      11s
 ```
 
-Then create a new file for **Deployment** - `postgres-deployment.yaml` and then apply it:
+Then create a new file for [**Deployment**](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) - `postgres-deployment.yaml` and then apply it:
 ```bash
 $ kubectl apply -f postgres-deployment.yaml
 deployment.apps/postgres created
@@ -71,7 +71,7 @@ NAME       READY   UP-TO-DATE   AVAILABLE   AGE
 postgres   1/1     1            1           5m6s
 ```
 
-And finally we need to expose pods from this *Deployment* to other pods inside this cluster using **ClusterIP** Service - `postgres-svc.yaml`:
+And finally we need to expose pods from this *Deployment* to other pods inside this cluster using [**ClusterIP**](https://kubernetes.io/docs/concepts/services-networking/service/) Service - `postgres-svc.yaml`:
 ```bash
 $ kubectl apply -f postgres-svc.yaml
 service/postgres-cluster-ip-svc created
@@ -107,9 +107,10 @@ pgadmin    1/1     1            1           7m41s
 postgres   1/1     1            1           9m42s
 ```
 
-To get inside the pgAdmin you need to set up **Ingress** which is a gateway to a cluster - the only way you can enter any application inside of it.
-https://github.com/kubernetes/ingress-nginx
-https://www.joyfulbikeshedding.com/blog/2018-03-26-studying-the-kubernetes-ingress-system.html
+To get inside the pgAdmin you need to set up [**Ingress**](https://kubernetes.io/docs/concepts/services-networking/ingress/) which is a gateway to a cluster - the only way you can enter any application inside of it.
+
+Community implementation of *Ingress*: https://github.com/kubernetes/ingress-nginx
+Article about *Ingress*: https://www.joyfulbikeshedding.com/blog/2018-03-26-studying-the-kubernetes-ingress-system.html
 
 Accordingly to an [official website documentation](https://kubernetes.github.io/ingress-nginx/deploy/) first we need to run following command in order to install *Ingress*:
 
@@ -134,7 +135,6 @@ $ minikube addons enable ingress
 🌟  The 'ingress' addon is enabled
 ```
 
-https://kubernetes.io/docs/concepts/services-networking/ingress/
 Now we need to set up some routing rules for *Ingress* controller. Therefore the `ingress-service.yaml` file has been created and applied:
 ```bash
 $ kubectl apply -f ingress-service.yaml
@@ -154,9 +154,6 @@ Then add new server with following connection properties.
 
 After that you should be able to get to the database.
 
-
-Add Volume, Secret, Deployment
-https://kubernetes.io/docs/concepts/storage/persistent-volumes/
 
 ### 3. Add `kanban-app` Deployment & Service 
 
