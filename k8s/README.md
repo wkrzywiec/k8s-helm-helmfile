@@ -185,6 +185,16 @@ In order to **delete** a Kubernetes resource (Pod, Deployemnt, etc.) use command
 $ kubectl delete -f ./k8s/postgres-deployment.yaml
 ```
 
+Minikube provides a **Dashboard** for entire cluster, after typing following command it will open
+```bash
+$ minikube dashboard
+🔌  Enabling dashboard ...
+🤔  Verifying dashboard health ...
+🚀  Launching proxy ...
+🤔  Verifying proxy health ...
+🎉  Opening http://127.0.0.1:45807/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+```
+
 If your pod is not starting properly you can investigate it by **describe pods <pod-name>** command:
 ```bash
 $ kubectl describe pods postgres-6fd67d4976-ljd2j
