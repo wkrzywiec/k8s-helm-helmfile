@@ -116,6 +116,7 @@ postgres   1/1     1            1           9m42s
 To get inside the pgAdmin you need to set up [**Ingress**](https://kubernetes.io/docs/concepts/services-networking/ingress/) which is a gateway to a cluster - the only way you can enter any application inside of it.
 
 Community implementation of *Ingress*: https://github.com/kubernetes/ingress-nginx
+
 Article about *Ingress*: https://www.joyfulbikeshedding.com/blog/2018-03-26-studying-the-kubernetes-ingress-system.html
 
 Accordingly to an [official website documentation](https://kubernetes.github.io/ingress-nginx/deploy/) first we need to run following command in order to install *Ingress*:
