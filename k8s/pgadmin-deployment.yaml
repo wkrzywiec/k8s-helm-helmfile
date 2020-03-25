@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+  labels:
+    app: pgadmin
+    group: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+        group: db
+    spec:
+      containers:
+        - name: pgadmin
+          image: dpage/pgadmin4:4.19
+          ports:
+            - containerPort: 80
+          env:
+            - name: PGADMIN_DEFAULT_EMAIL
+              value: admin@test.com
+            - name: PGADMIN_DEFAULT_PASSWORD
+              value: admin

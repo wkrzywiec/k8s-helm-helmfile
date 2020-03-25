@@ -3,8 +3,7 @@ kind: ConfigMap
 metadata:
   name: postgres-config
   labels:
-    app: postgres
-    type: db
+    group: db
 data:
   POSTGRES_DB: kanban
   POSTGRES_USER: kanban

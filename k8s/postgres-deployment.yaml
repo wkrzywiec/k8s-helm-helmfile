@@ -4,13 +4,12 @@ metadata:
   name: postgres
   labels:
     app: postgres
-    type: db
+    group: db
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: postgres
-      type: db
   template:
     metadata:
       labels:
