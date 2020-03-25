@@ -42,6 +42,9 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
 ### 2. Add postgres & pgAdmin services
 
+#### postgres
+___
+
 First create [**PeristentVolumeClaim**](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) using `postgres-pvc.yaml` file. And then apply it:
 ```bash
 $ kubectl apply -f postgres-pvc.yaml
@@ -81,6 +84,9 @@ NAME                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    A
 kubernetes                ClusterIP   10.96.0.1       <none>        443/TCP    8m35s
 postgres-cluster-ip-svc   ClusterIP   10.109.98.250   <none>        5432/TCP   4m34s
 ```
+
+#### pgAdmin 
+___
 
 Postgres is set up (but it can't be accessable by any other service inside or outside cluster yet). So let's move on to **pgAdmin**.
 
