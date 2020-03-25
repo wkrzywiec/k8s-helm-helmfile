@@ -10,5 +10,5 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: pgadmin-cluster-ip-svc
+              serviceName: kanban-ui-cluster-ip-svc
               servicePort: 80
