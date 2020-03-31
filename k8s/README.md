@@ -1,8 +1,11 @@
 # Kubernetes Deployment
 
 ### 0. Install Minikube & Kubectl
+___
+
 
 ### 1. Start a new Minikube cluster
+___
 
 In order to run a minikube cluster:
 ```bash
@@ -37,43 +40,40 @@ KubeDNS is running at https://127.0.0.1:32768/api/v1/namespaces/kube-system/serv
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
-### 2. Add Ingress
+### 2. Edit hosts file
+___
 
-To get inside the application you need to set up [**Ingress**](https://kubernetes.io/docs/concepts/services-networking/ingress/) which is a gateway to a cluster - the only way you can enter any application inside of it.
+As I want to have two different URLs to enter the *adminer* (database management tool) and *kanban* app you need to config your **hosts** file - add following lines:
 
-Community implementation of *Ingress*: https://github.com/kubernetes/ingress-nginx
-
-Article about *Ingress*: https://www.joyfulbikeshedding.com/blog/2018-03-26-studying-the-kubernetes-ingress-system.html
-
-Accordingly to an [official website documentation](https://kubernetes.github.io/ingress-nginx/deploy/) first we need to run following command in order to install *Ingress*:
-
-```bash
-$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
-namespace/ingress-nginx created
-configmap/nginx-configuration created
-configmap/tcp-services created
-configmap/udp-services created
-serviceaccount/nginx-ingress-serviceaccount created
-clusterrole.rbac.authorization.k8s.io/nginx-ingress-clusterrole created
-role.rbac.authorization.k8s.io/nginx-ingress-role created
-rolebinding.rbac.authorization.k8s.io/nginx-ingress-role-nisa-binding created
-clusterrolebinding.rbac.authorization.k8s.io/nginx-ingress-clusterrole-nisa-binding created
-deployment.apps/nginx-ingress-controller created
-limitrange/ingress-nginx created
+```
+<MINIKUBE_IP>	adminer.k8s.com
+<MINIKUBE_IP>	kanban.k8s.com
 ```
 
-For simplicity, I've downloaded above file and save it as *ingress-nginx.yaml*.
+The `<MINIKUBE_IP>` placeholder is individual per machine. To figure it out you need to have `minikube` up and running. If you're sure it's working you can run the command:
 
-Next, we need to run another command to enable *Ingress* addon:
 ```bash
-$ minikube addons enable ingress
-🌟  The 'ingress' addon is enabled
+$ minikube ip
+172.17.0.2
 ```
 
-### 3. Add postgres & adminver services
+So in my case, I need to add following lines to the *hosts*  file:
+
+```
+172.17.0.2	adminer.k8s.com
+172.17.0.2	kanban.k8s.com
+```
+
+Location of *hosts* file on different OS:
+* [Linux (Ubuntu)](http://manpages.ubuntu.com/manpages/trusty/man5/hosts.5.html)
+* [Windows 10](https://www.groovypost.com/howto/edit-hosts-file-windows-10/)
+* [Mac](https://www.imore.com/how-edit-your-macs-hosts-file-and-why-you-would-want#page1)
+
+### 3. Add postgres & adminer services
+___
 
 #### postgres
-___
+
 
 First create [**PeristentVolumeClaim**](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) using `postgres-pvc.yaml` file. And then apply it:
 ```bash
@@ -116,7 +116,6 @@ postgres     ClusterIP   10.109.98.250   <none>        5432/TCP   4m34s
 ```
 
 #### adminer 
-___
 
 Postgres is set up (but it can't be accessable by any other service inside or outside cluster yet). So let's move on to **adminer**.
 
@@ -134,36 +133,16 @@ To check if all your Pods and Deplyments are ok you can type:
 ```bash
 $ kubectl get pods
 NAME                       READY   STATUS    RESTARTS   AGE
-pgadmin-6f9fd8d895-jqjpb   1/1     Running   0          7m14s
+adminer-6f9fd8d895-jqjpb   1/1     Running   0          7m14s
 postgres-8ff946f87-z4bzn   1/1     Running   0          9m15s
 
 $ kubectl get deployments
 NAME       READY   UP-TO-DATE   AVAILABLE   AGE
-pgadmin    1/1     1            1           7m41s
+adminer    1/1     1            1           7m41s
 postgres   1/1     1            1           9m42s
 ```
 
-Now we need to set up some routing rules for *Ingress* controller. Therefore the `ingress-service.yaml` file has been created and applied:
-```bash
-$ kubectl apply -f ingress-service.yaml
-ingress.networking.k8s.io/ingress-service created
-```
-
-To start testing you need to first know the ip of your cluster, therefore:
-```bash
-$ minikube ip
-172.17.0.2
-```
-Now, go to the web browser and type *http://172.17.0.2/* so pgAdmin page will show up. Login using configured credentials:
-user: *admin@test.com*
-pass: *admin*
-
-Then add new server with following connection properties.
-
-After that you should be able to get to the database.
-
-
-### 3. Add `kanban-app` Deployment & Service 
+### 4. Add kanban application 
 
 First `kanban-app-deployment.yaml` file has beed created. Then inside a terminal use following command:
 ```bash
@@ -181,6 +160,89 @@ $ kubectl get deployments
 NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
 kanban-app-deployment   0/1     1            0           2m56s
 ```
+
+### 5. Add & config Ingress
+___
+
+
+#### Add Ingress 
+
+To get inside the application you need to set up [**Ingress**](https://kubernetes.io/docs/concepts/services-networking/ingress/) which is a gateway to a cluster - the only way you can enter any application inside of it.
+
+Community implementation of *Ingress*: https://github.com/kubernetes/ingress-nginx
+
+Article about *Ingress*: https://www.joyfulbikeshedding.com/blog/2018-03-26-studying-the-kubernetes-ingress-system.html
+
+Accordingly to an [official website documentation](https://kubernetes.github.io/ingress-nginx/deploy/) first we need to run following command in order to install *Ingress*:
+
+```bash
+$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
+namespace/ingress-nginx created
+configmap/nginx-configuration created
+configmap/tcp-services created
+configmap/udp-services created
+serviceaccount/nginx-ingress-serviceaccount created
+clusterrole.rbac.authorization.k8s.io/nginx-ingress-clusterrole created
+role.rbac.authorization.k8s.io/nginx-ingress-role created
+rolebinding.rbac.authorization.k8s.io/nginx-ingress-role-nisa-binding created
+clusterrolebinding.rbac.authorization.k8s.io/nginx-ingress-clusterrole-nisa-binding created
+deployment.apps/nginx-ingress-controller created
+limitrange/ingress-nginx created
+```
+
+For simplicity, I've downloaded above file and save it as *ingress-nginx.yaml*.
+
+Next, we need to run another command to enable *Ingress* addon:
+```bash
+$ minikube addons enable ingress
+🌟  The 'ingress' addon is enabled
+```
+
+#### Routing config of Ingress Controller
+
+Now we need to set up some routing rules for *Ingress* controller. Therefore the `ingress-service.yaml` file has been created and applied:
+```bash
+$ kubectl apply -f ingress-service.yaml
+ingress.networking.k8s.io/ingress-service created
+```
+
+### 6. Testing application
+___
+
+#### Adminer
+
+It's available under the URL *http://adminer.k8s.com* and the credentials are:
+```
+System: PostgreSQL
+Server: postgres
+Username: kanban
+Password: kanban
+Database: kanban
+```
+
+After that you should be login to the database. 
+
+If you want to change the default design of an adminer you can specify it in the `adminer-deployment.yaml` file in the `spec.template.spec.containers[0].env[0]` where you can change a `value` of `ADMINER_DESIGN` variable from `pepa-linha` to whatever you want (full list available in [the GitHub project](https://github.com/vrana/adminer/tree/master/designs)):
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adminer
+spec:
+  template:
+    spec:
+      containers:
+          env:
+            - name: ADMINER_DESIGN
+              value: pepa-linha
+```
+
+#### Kanban
+
+The UI is available under the address *http://kanban.k8s.com*.
+
+If you want to connect directly to the backend you need to append above URL with */api/* prefix, e.g. *http://kanban.k8s.com/api/kanbans/*.
 
 ### Maintenance
 
@@ -267,6 +329,11 @@ Events:
 ```
 
 ### References
+
+Ingress Controllers
+https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/
+
+
 
 https://severalnines.com/database-blog/using-kubernetes-deploy-postgresql
 

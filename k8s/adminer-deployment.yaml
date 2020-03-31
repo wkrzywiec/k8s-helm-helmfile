@@ -23,6 +23,6 @@ spec:
             - containerPort: 8080
           env:
             - name: ADMINER_DESIGN
-              value: lucas-sandery
+              value: pepa-linha
             - name: ADMINER_DEFAULT_SERVER
               value: postgres
