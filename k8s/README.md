@@ -8,17 +8,14 @@ In order to run a minikube cluster:
 ```bash
 $ minikube start
 😄  minikube v1.8.1 on Ubuntu 18.04
-✨  Using the docker driver based on existing profile
-
-⚠️  'docker' driver reported an issue: signal: killed
-💡  Suggestion: Docker is not running or is responding too slow. Try: restarting docker desktop.
-
-⌛  Reconfiguring existing host ...
-🔄  Starting existing docker container for "minikube" ...
+✨  Automatically selected the docker driver
+🔥  Creating Kubernetes in docker container with (CPUs=2) (8 available), Memory=2200MB (7826MB available) ...
 🐳  Preparing Kubernetes v1.17.3 on Docker 19.03.2 ...
     ▪ kubeadm.pod-network-cidr=10.244.0.0/16
+❌  Unable to load cached images: loading cached images: stat /home/wojtek/.minikube/cache/images/k8s.gcr.io/kube-proxy_v1.17.3: no such file or directory
 🚀  Launching Kubernetes ... 
 🌟  Enabling addons: default-storageclass, storage-provisioner
+⌛  Waiting for cluster to come online ...
 🏄  Done! kubectl is now configured to use "minikube"
 ```
 
@@ -40,7 +37,40 @@ KubeDNS is running at https://127.0.0.1:32768/api/v1/namespaces/kube-system/serv
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
-### 2. Add postgres & pgAdmin services
+### 2. Add Ingress
+
+To get inside the application you need to set up [**Ingress**](https://kubernetes.io/docs/concepts/services-networking/ingress/) which is a gateway to a cluster - the only way you can enter any application inside of it.
+
+Community implementation of *Ingress*: https://github.com/kubernetes/ingress-nginx
+
+Article about *Ingress*: https://www.joyfulbikeshedding.com/blog/2018-03-26-studying-the-kubernetes-ingress-system.html
+
+Accordingly to an [official website documentation](https://kubernetes.github.io/ingress-nginx/deploy/) first we need to run following command in order to install *Ingress*:
+
+```bash
+$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
+namespace/ingress-nginx created
+configmap/nginx-configuration created
+configmap/tcp-services created
+configmap/udp-services created
+serviceaccount/nginx-ingress-serviceaccount created
+clusterrole.rbac.authorization.k8s.io/nginx-ingress-clusterrole created
+role.rbac.authorization.k8s.io/nginx-ingress-role created
+rolebinding.rbac.authorization.k8s.io/nginx-ingress-role-nisa-binding created
+clusterrolebinding.rbac.authorization.k8s.io/nginx-ingress-clusterrole-nisa-binding created
+deployment.apps/nginx-ingress-controller created
+limitrange/ingress-nginx created
+```
+
+For simplicity, I've downloaded above file and save it as *ingress-nginx.yaml*.
+
+Next, we need to run another command to enable *Ingress* addon:
+```bash
+$ minikube addons enable ingress
+🌟  The 'ingress' addon is enabled
+```
+
+### 3. Add postgres & adminver services
 
 #### postgres
 ___
@@ -77,27 +107,27 @@ postgres   1/1     1            1           5m6s
 And finally we need to expose pods from this *Deployment* to other pods inside this cluster using [**ClusterIP**](https://kubernetes.io/docs/concepts/services-networking/service/) Service - `postgres-svc.yaml`:
 ```bash
 $ kubectl apply -f postgres-svc.yaml
-service/postgres-cluster-ip-svc created
+service/postgres created
 
 $ kubectl get svc
-NAME                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
-kubernetes                ClusterIP   10.96.0.1       <none>        443/TCP    8m35s
-postgres-cluster-ip-svc   ClusterIP   10.109.98.250   <none>        5432/TCP   4m34s
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP    8m35s
+postgres     ClusterIP   10.109.98.250   <none>        5432/TCP   4m34s
 ```
 
-#### pgAdmin 
+#### adminer 
 ___
 
-Postgres is set up (but it can't be accessable by any other service inside or outside cluster yet). So let's move on to **pgAdmin**.
+Postgres is set up (but it can't be accessable by any other service inside or outside cluster yet). So let's move on to **adminer**.
 
-Similar story here, first we need to create a *Deployment* (`pgadmin-deployment.yaml`) & *Service* (`pgadmin-svc.yaml`) for pgAdmin and both of them apply using `kubectl apply -f` command.
+Similar story here, first we need to create a *Deployment* (`adminer-deployment.yaml`) & *Service* (`adminer-svc.yaml`) for adminer and both of them apply using `kubectl apply -f` command.
 
 ```bash
-$ kubectl apply -f pgadmin-deployment.yaml
-deployment.apps/pgadmin created
+$ kubectl apply -f adminer-deployment.yaml
+deployment.apps/adminer created
 
-$ kubectl apply -f pgadmin-svc.yaml
-service/pgadmin-cluster-ip-svc created
+$ kubectl apply -f adminer-svc.yaml
+service/adminer created
 ```
 
 To check if all your Pods and Deplyments are ok you can type:
@@ -111,35 +141,6 @@ $ kubectl get deployments
 NAME       READY   UP-TO-DATE   AVAILABLE   AGE
 pgadmin    1/1     1            1           7m41s
 postgres   1/1     1            1           9m42s
-```
-
-To get inside the pgAdmin you need to set up [**Ingress**](https://kubernetes.io/docs/concepts/services-networking/ingress/) which is a gateway to a cluster - the only way you can enter any application inside of it.
-
-Community implementation of *Ingress*: https://github.com/kubernetes/ingress-nginx
-
-Article about *Ingress*: https://www.joyfulbikeshedding.com/blog/2018-03-26-studying-the-kubernetes-ingress-system.html
-
-Accordingly to an [official website documentation](https://kubernetes.github.io/ingress-nginx/deploy/) first we need to run following command in order to install *Ingress*:
-
-```bash
-$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
-namespace/ingress-nginx created
-configmap/nginx-configuration created
-configmap/tcp-services created
-configmap/udp-services created
-serviceaccount/nginx-ingress-serviceaccount created
-clusterrole.rbac.authorization.k8s.io/nginx-ingress-clusterrole created
-role.rbac.authorization.k8s.io/nginx-ingress-role created
-rolebinding.rbac.authorization.k8s.io/nginx-ingress-role-nisa-binding created
-clusterrolebinding.rbac.authorization.k8s.io/nginx-ingress-clusterrole-nisa-binding created
-deployment.apps/nginx-ingress-controller created
-limitrange/ingress-nginx created
-```
-
-The entire file for this config can be found in this README, in section *Ingress Prerequisite*. Next, we need to run another command:
-```bash
-$ minikube addons enable ingress
-🌟  The 'ingress' addon is enabled
 ```
 
 Now we need to set up some routing rules for *Ingress* controller. Therefore the `ingress-service.yaml` file has been created and applied:
