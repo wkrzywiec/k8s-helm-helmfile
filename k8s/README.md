@@ -1,11 +1,31 @@
 # Kubernetes Deployment
 
-### 0. Install Minikube & Kubectl
-___
+### Table of contents 
+* [Install Minikube & Kubectl](#Install-Minikube-&-Kubectl)
+* [Start a new Minikube cluster](#Start-a-new-Minikube-cluster)
+* [Edit hosts file](#Edit-hosts-file)
+* [Add postgres & adminer](#Add-postgres-&-adminer)
+  * [postgres](#postgres)
+  * [adminer](#adminer)
+* [Add kanban](#Add-kanban)
+* [Add & config Ingress](#Add-&-config-Ingress)
+  * [Add Ingress](#Add-Ingress) 
+  * [Routing config of Ingress Controller](#Routing-config-of-Ingress-Controller)
+* [Testing application](#Testing-application)
+  * [Adminer App](#Adminer-App)
+  * [Kanban App](#Kanban-App)
+* [Maintenance](#Maintenance)
+* [References](#References)
 
+Install Minikube & Kubectl
+==========================
 
-### 1. Start a new Minikube cluster
-___
+Installing Docker - https://docs.docker.com/install/
+Installing minikube - https://kubernetes.io/docs/tasks/tools/install-minikube/
+Installing kubectl - https://kubernetes.io/docs/tasks/tools/install-kubectl/
+
+Start a new Minikube cluster
+============================
 
 In order to run a minikube cluster:
 ```bash
@@ -31,17 +51,17 @@ apiserver: Running
 kubeconfig: Configured
 ```
 
-To check that `kubectl` is properly configured check this:
+To check that `kubectl` is properly configured:
 ```bash
-$ kubectl cluster-infor
+$ kubectl cluster-info
 Kubernetes master is running at https://127.0.0.1:32768
 KubeDNS is running at https://127.0.0.1:32768/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
-### 2. Edit hosts file
-___
+Edit hosts file
+===============
 
 As I want to have two different URLs to enter the *adminer* (database management tool) and *kanban* app you need to config your **hosts** file - add following lines:
 
@@ -50,15 +70,13 @@ As I want to have two different URLs to enter the *adminer* (database management
 <MINIKUBE_IP>	kanban.k8s.com
 ```
 
-The `<MINIKUBE_IP>` placeholder is individual per machine. To figure it out you need to have `minikube` up and running. If you're sure it's working you can run the command:
-
+A value for `<MINIKUBE_IP>` placeholder is individual per machine. To figure it out you need to have `minikube` up and running. If you're sure it's working you can run the command:
 ```bash
 $ minikube ip
 172.17.0.2
 ```
 
 So in my case, I need to add following lines to the *hosts*  file:
-
 ```
 172.17.0.2	adminer.k8s.com
 172.17.0.2	kanban.k8s.com
@@ -69,10 +87,11 @@ Location of *hosts* file on different OS:
 * [Windows 10](https://www.groovypost.com/howto/edit-hosts-file-windows-10/)
 * [Mac](https://www.imore.com/how-edit-your-macs-hosts-file-and-why-you-would-want#page1)
 
-### 3. Add postgres & adminer services
-___
+Add postgres & adminer
+======================
 
-#### postgres
+postgres
+--------
 
 
 First create [**PeristentVolumeClaim**](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) using `postgres-pvc.yaml` file. And then apply it:
@@ -115,7 +134,8 @@ kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP    8m35s
 postgres     ClusterIP   10.109.98.250   <none>        5432/TCP   4m34s
 ```
 
-#### adminer 
+adminer 
+-------
 
 Postgres is set up (but it can't be accessable by any other service inside or outside cluster yet). So let's move on to **adminer**.
 
@@ -142,7 +162,8 @@ adminer    1/1     1            1           7m41s
 postgres   1/1     1            1           9m42s
 ```
 
-### 4. Add kanban application 
+Add kanban 
+==========
 
 First `kanban-app-deployment.yaml` file has beed created. Then inside a terminal use following command:
 ```bash
@@ -161,11 +182,10 @@ NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
 kanban-app-deployment   0/1     1            0           2m56s
 ```
 
-### 5. Add & config Ingress
-___
-
-
-#### Add Ingress 
+Add & config Ingress
+====================
+Add Ingress 
+-----------
 
 To get inside the application you need to set up [**Ingress**](https://kubernetes.io/docs/concepts/services-networking/ingress/) which is a gateway to a cluster - the only way you can enter any application inside of it.
 
@@ -198,7 +218,8 @@ $ minikube addons enable ingress
 🌟  The 'ingress' addon is enabled
 ```
 
-#### Routing config of Ingress Controller
+Routing config of Ingress Controller
+------------------------------------
 
 Now we need to set up some routing rules for *Ingress* controller. Therefore the `ingress-service.yaml` file has been created and applied:
 ```bash
@@ -206,10 +227,10 @@ $ kubectl apply -f ingress-service.yaml
 ingress.networking.k8s.io/ingress-service created
 ```
 
-### 6. Testing application
-___
-
-#### Adminer
+Testing application
+===================
+Adminer App
+-----------
 
 It's available under the URL *http://adminer.k8s.com* and the credentials are:
 ```
@@ -238,22 +259,19 @@ spec:
               value: pepa-linha
 ```
 
-#### Kanban
+Kanban App
+----------
 
 The UI is available under the address *http://kanban.k8s.com*.
 
-If you want to connect directly to the backend you need to append above URL with */api/* prefix, e.g. *http://kanban.k8s.com/api/kanbans/*.
+If you want to connect directly to the backend you need to append above URL with */api/* prefix, e.g. *http://kanban.k8s.com/api/swagger-ui.html*.
 
-### Maintenance
+Maintenance
+===========
 
 Official **kubectl** cheatsheet:
 
 https://kubernetes.io/docs/reference/kubectl/cheatsheet/
-
-In order to **delete** a Kubernetes resource (Pod, Deployemnt, etc.) use command:
-```bash
-$ kubectl delete -f ./k8s/postgres-deployment.yaml
-```
 
 Minikube provides a **Dashboard** for entire cluster, after typing following command it will open
 ```bash
@@ -328,18 +346,24 @@ Events:
 
 ```
 
-### References
+References
+==========
 
-Ingress Controllers
+* kubectl overview
+https://kubernetes.io/docs/reference/kubectl/overview/
+
+* `kubectl create` vs `kubectl apply`
+https://stackoverflow.com/questions/47369351/kubectl-apply-vs-kubectl-create 
+
+* Minikube
+https://kubernetes.io/docs/setup/learning-environment/minikube/
+
+* Ingress Controllers
 https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/
 
-
-
+* PostgreSQL in Kubernetes
 https://severalnines.com/database-blog/using-kubernetes-deploy-postgresql
 
-https://kubernetes.io/docs/reference/kubectl/overview/
-https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
-https://stackoverflow.com/questions/47369351/kubectl-apply-vs-kubectl-create
-
-https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+* Adminer Docker
+https://hub.docker.com/_/adminer/
 
