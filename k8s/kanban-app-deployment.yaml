@@ -18,9 +18,9 @@ spec:
     spec:
       containers:
         - name: kanban-app
-          image: wkrzywiec/kanban-app:1.0
+          image: wkrzywiec/kanban-app:k8s
           ports:
             - containerPort: 8080
           env:
             - name: DB_SERVER
-              value: postgres-cluster-ip-svc
+              value: postgres

@@ -17,7 +17,7 @@ spec:
         group: frontend
     spec:
       containers:
-        - name: kanban-app
-          image: wkrzywiec/kanban-ui:1.0
+        - name: kanban-ui
+          image: wkrzywiec/kanban-ui:k8s
           ports:
             - containerPort: 80

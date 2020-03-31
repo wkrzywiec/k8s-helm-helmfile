@@ -3,12 +3,16 @@ kind: Ingress
 metadata:
   name: ingress-service
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx
 spec:
   rules:
     - http:
         paths:
+          - path: /api/
+            backend:
+              serviceName: kanban-app
+              servicePort: 8080
           - path: /
             backend:
-              serviceName: kanban-ui-cluster-ip-svc
+              serviceName: kanban-ui
               servicePort: 80
