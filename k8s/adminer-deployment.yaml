@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adminer
+  labels:
+    app: adminer
+    group: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adminer
+  template:
+    metadata:
+      labels:
+        app: adminer
+        group: db
+    spec:
+      containers:
+        - name: adminer
+          image: adminer:4.7.6-standalone
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ADMINER_DESIGN
+              value: pepa-linha
+            - name: ADMINER_DEFAULT_SERVER
+              value: postgres

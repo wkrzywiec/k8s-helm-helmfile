@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: adminer.k8s.com
+      http:
+        paths:
+          - path: /
+            backend:  
+              serviceName: adminer
+              servicePort: 8080
+    - host: kanban.k8s.com
+      http:
+        paths: 
+          - path: /api/
+            backend:
+              serviceName: kanban-app
+              servicePort: 8080
+          - path: /
+            backend:
+              serviceName: kanban-ui
+              servicePort: 80

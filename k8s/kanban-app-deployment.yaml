@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kanban-app
+  labels:
+    app: kanban-app
+    group: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kanban-app
+  template:
+    metadata:
+      labels:
+        app: kanban-app
+        group: backend
+    spec:
+      containers:
+        - name: kanban-app
+          image: wkrzywiec/kanban-app:k8s
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_SERVER
+              value: postgres

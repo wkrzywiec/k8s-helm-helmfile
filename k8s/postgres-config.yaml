@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    group: db
+data:
+  POSTGRES_DB: kanban
+  POSTGRES_USER: kanban
+  POSTGRES_PASSWORD: kanban

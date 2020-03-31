@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: adminer
+  labels: 
+    group: db
+spec:
+  type: ClusterIP
+  selector:             # indicates into which pods ClusterIP provides access
+    app: adminer
+  ports:
+    - port: 8080          # port exposed outside ClusterIP
+      targetPort: 8080    # port exposed by Pod

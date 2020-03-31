@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels: 
+    group: db
+spec:
+  type: ClusterIP
+  selector:               # indicates into which pods ClusterIP provides access
+    app: postgres
+  ports:
+    - port: 5432          # port exposed outside ClusterIP
+      targetPort: 5432    # port exposed by Pod
