@@ -16,7 +16,7 @@ spec:
         app: postgres
         type: db
     spec:
-      volumes:
+      volumes:                        # indicates which PVC are available for this Deployment
         - name: postgres-storage
           persistentVolumeClaim:
             claimName: postgres-persistent-volume-claim
@@ -28,6 +28,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: postgres-config
-          volumeMounts:
-            - name: postgres-storage
-              mountPath: /var/lib/postgresql/data
+          volumeMounts:              # indicates which Volume (from spec.template.spec.volumes) should be used
+            - name: postgres-storage   # name of the Volume
+              mountPath: /var/lib/postgresql/data   # path inside the container

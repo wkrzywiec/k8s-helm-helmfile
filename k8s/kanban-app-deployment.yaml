@@ -21,6 +21,9 @@ spec:
           image: wkrzywiec/kanban-app:k8s
           ports:
             - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: postgres-config
           env:
             - name: DB_SERVER
               value: postgres

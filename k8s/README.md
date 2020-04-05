@@ -106,7 +106,8 @@ postgres-persistent-volume-claim   Bound    pvc-f5d9b781-9cdf-4a4c-8c9b-2edb8330
 
 Next create a [**ConfigMap**](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/) that will hold all database credentials - `postgres-configmap.yaml`:
 ```bash
-$ kubectl apply -f postgres-configmap.yaml
+$ kubectl apply -f postgres-config.yaml
+configmap/postgres-config created
 
 $ kubectl get configmaps
 NAME              DATA   AGE
@@ -221,10 +222,10 @@ $ minikube addons enable ingress
 Routing config of Ingress Controller
 ------------------------------------
 
-Now we need to set up some routing rules for *Ingress* controller. Therefore the `ingress-service.yaml` file has been created and applied:
+Now we need to set up some routing rules for *Ingress* controller. Therefore the `ingress-controller.yaml` file has been created and applied:
 ```bash
-$ kubectl apply -f ingress-service.yaml
-ingress.networking.k8s.io/ingress-service created
+$ kubectl apply -f ingress-controller.yaml
+ingress.networking.k8s.io/ingress-controller created
 ```
 
 Testing application
