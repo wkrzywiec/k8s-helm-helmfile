@@ -101,7 +101,7 @@ Creating helm
 $ tree -a
 .
 ├── charts
-├── Chart.yaml
+├── Chart.yaml                      # A YAML file containing information about the chart
 ├── .helmignore
 ├── README.md
 ├── templates
@@ -113,9 +113,10 @@ $ tree -a
 │   ├── service.yaml
 │   └── tests
 │       └── test-connection.yaml
-└── values.yaml
+└── values.yaml                     # The default configuration values for this chart
 ```
 
+Chart structure - https://helm.sh/docs/topics/charts/
 
 
 
@@ -191,3 +192,9 @@ https://www.civo.com/learn/guide-to-helm-3-with-an-express-js-microservice
 
 https://codefresh.io/docs/docs/new-helm/helm-best-practices/
 https://akomljen.com/package-kubernetes-applications-with-helm/
+
+https://itnext.io/drastically-improve-your-kubernetes-deployments-with-helm-5323e7f11ef8
+
+https://www.reddit.com/r/kubernetes/comments/8x3znr/deploying_multiple_similar_applications_with_helm/e20vwfc/
+https://www.reddit.com/r/kubernetes/comments/80hmaj/helm_at_reddit_from_local_dev_staging_to/
+

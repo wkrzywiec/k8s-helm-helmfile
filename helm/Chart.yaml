@@ -1,6 +1,6 @@
 apiVersion: v2
 name: helm
-description: A Helm chart for Kubernetes
+description: An Umbrella Helm chart for all Kubernetes Objects needed to deploy Kanban Application
 
 # A chart can be either an 'application' or a 'library' chart.
 #
