@@ -184,6 +184,27 @@ Create a new common chart:
 Creating common
 ```
 
+Remove unnecessary files, so the folder structure looks as follows:
+```bash
+./helm$ tree
+
+.
+├── Chart.lock
+├── charts
+│   ├── common
+│   │   ├── charts
+│   │   ├── Chart.yaml
+│   │   ├── templates
+│   │   │   ├── deployment.yaml
+│   │   │   └── service.yaml
+│   │   └── values.yaml
+│   └── nginx-ingress-1.36.0.tgz
+├── Chart.yaml
+├── README.md
+├── templates
+│   └── ingress.yaml
+└── values.yaml
+```
 
 ### Adminer
 
