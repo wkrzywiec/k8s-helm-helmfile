@@ -176,6 +176,15 @@ kanban-nginx-ingress-controller        1/1     1            1           108s
 kanban-nginx-ingress-default-backend   1/1     1            1           108s
 ```
 
+### Common Chart
+
+Create a new common chart:
+```bash
+./helm/charts$ helm create common
+Creating common
+```
+
+
 ### Adminer
 
 helm install adminer cetic/adminer --version 0.1.3
