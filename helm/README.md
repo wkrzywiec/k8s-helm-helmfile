@@ -120,69 +120,67 @@ $ tree -a
 └── values.yaml                     # The default configuration values for this chart
 ```
 
+Clean folder to have only those files:
+```bash
+.
+├── charts
+├── Chart.yaml
+├── README.md
+├── templates
+│   └── ingress.yaml
+└── values.yaml
+```
+
 Chart structure - https://helm.sh/docs/topics/charts/
 
+### Ingress
 
+To `Chart.yaml` file add dependency:
+```yaml
+dependencies:
+  - name: nginx-ingress
+    version: 1.36.0
+    repository: https://kubernetes-charts.storage.googleapis.com/
+```
+
+Then, you need to update the dependency (download packed chart):
+```bash
+./helm$ helm dependency update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "cetic" chart repository
+...Successfully got an update from the "stable" chart repository
+Update Complete. ⎈Happy Helming!⎈
+Saving 1 charts
+Downloading nginx-ingress from repo https://kubernetes-charts.storage.googleapis.com/
+Deleting outdated charts
+```
+
+After that new file will show up in `/charts` folder - **nginx-ingress-1.36.0.tgz**.
+
+To install this dependency:
+```bash
+./helm$ helm install kanban .
+NAME: kanban
+LAST DEPLOYED: Tue Apr  7 07:04:18 2020
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+```
+
+And to check Deployments:
+```bash
+$ kubectl get deployments
+NAME                                   READY   UP-TO-DATE   AVAILABLE   AGE
+kanban-nginx-ingress-controller        1/1     1            1           108s
+kanban-nginx-ingress-default-backend   1/1     1            1           108s
+```
 
 ### Adminer
 
 helm install adminer cetic/adminer --version 0.1.3
 
-Ingress
-=======
 
-Install using Helm, go to official docs - https://kubernetes.github.io/ingress-nginx/deploy/#using-helm
-
-```bash
-$ helm install my-nginx stable/nginx-ingress
-NAME: my-nginx
-LAST DEPLOYED: Wed Apr  1 07:42:46 2020
-NAMESPACE: default
-STATUS: deployed
-REVISION: 1
-TEST SUITE: None
-NOTES:
-The nginx-ingress controller has been installed.
-It may take a few minutes for the LoadBalancer IP to be available.
-You can watch the status by running 'kubectl --namespace default get services -o wide -w my-nginx-nginx-ingress-controller'
-
-An example Ingress that makes use of the controller:
-
-  apiVersion: extensions/v1beta1
-  kind: Ingress
-  metadata:
-    annotations:
-      kubernetes.io/ingress.class: nginx
-    name: example
-    namespace: foo
-  spec:
-    rules:
-      - host: www.example.com
-        http:
-          paths:
-            - backend:
-                serviceName: exampleService
-                servicePort: 80
-              path: /
-    # This section is only required if TLS is to be enabled for the Ingress
-    tls:
-        - hosts:
-            - www.example.com
-          secretName: example-tls
-
-If TLS is enabled for the Ingress, a Secret containing the certificate and key must also be provided:
-
-  apiVersion: v1
-  kind: Secret
-  metadata:
-    name: example-tls
-    namespace: foo
-  data:
-    tls.crt: <base64 encoded cert>
-    tls.key: <base64 encoded key>
-  type: kubernetes.io/tls
-
-```
 
 
 
