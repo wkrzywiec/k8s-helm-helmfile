@@ -180,8 +180,8 @@ kanban-nginx-ingress-default-backend   1/1     1            1           108s
 
 Create a new common chart:
 ```bash
-./helm/charts$ helm create common
-Creating common
+./helm/charts$ helm create app
+Creating app
 ```
 
 Remove unnecessary files, so the folder structure looks as follows:
@@ -191,7 +191,7 @@ Remove unnecessary files, so the folder structure looks as follows:
 .
 ├── Chart.lock
 ├── charts
-│   ├── common
+│   ├── app
 │   │   ├── charts
 │   │   ├── Chart.yaml
 │   │   ├── templates
@@ -205,6 +205,10 @@ Remove unnecessary files, so the folder structure looks as follows:
 │   └── ingress.yaml
 └── values.yaml
 ```
+
+Rename `deployment.yaml` & `service.yaml` to be [Named Templates](https://helm.sh/docs/chart_template_guide/named_templates/) - `_deployment.yaml` & `_service.yaml` respectively. 
+
+
 
 ### Adminer
 
