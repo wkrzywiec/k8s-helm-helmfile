@@ -44,6 +44,12 @@ KubeDNS is running at https://127.0.0.1:32768/api/v1/namespaces/kube-system/serv
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
+Next, we need to run another command to enable *Ingress* addon:
+```bash
+$ minikube addons enable ingress
+🌟  The 'ingress' addon is enabled
+```
+
 ## Preconfiguration
 ## Edit hosts file
 
@@ -74,8 +80,6 @@ Location of *hosts* file on different OS:
 
 
 ### Helm config
-
-
 
 Add repository with official stable Helm charts:
 
@@ -121,7 +125,6 @@ Chart structure - https://helm.sh/docs/topics/charts/
 
 
 ### Adminer
-
 
 helm install adminer cetic/adminer --version 0.1.3
 
