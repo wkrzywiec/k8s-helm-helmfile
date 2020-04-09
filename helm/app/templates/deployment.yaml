@@ -6,7 +6,7 @@ metadata:
     app: {{ .Values.app.name }}
     group: {{ .Values.app.group }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.app.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Values.app.name }}
@@ -21,4 +21,8 @@ spec:
           image: {{ .Values.app.container.image }}  
           ports:
             - containerPort: {{ .Values.app.container.port }}  
-          env: []
+          env:
+            {{- range .Values.app.container.env}}
+            - name: {{ .key}}
+              value: {{ .value}}
+            {{- end}}
