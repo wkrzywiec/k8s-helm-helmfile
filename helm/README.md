@@ -190,6 +190,28 @@ REVISION: 2
 TEST SUITE: None
 ```
 
+### kanban-ui
+
+```bash
+$ helm install -f kanban-ui.yaml kanban-ui ./app
+NAME: kanban-ui
+LAST DEPLOYED: Thu Apr  9 21:46:42 2020
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+
+
+$ helm upgrade -f ingress.yaml ingress ./ingress
+Release "ingress" has been upgraded. Happy Helming!
+NAME: ingress
+LAST DEPLOYED: Thu Apr  9 21:46:58 2020
+NAMESPACE: default
+STATUS: deployed
+REVISION: 3
+TEST SUITE: None
+```
+
 Reference
 =========
 
