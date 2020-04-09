@@ -1,0 +1,8 @@
+ingress:
+  hosts:
+    - host: adminer.k8s.com
+      paths:
+        - path: '/'
+          backend:  
+            serviceName: adminer
+            servicePort: 8080
