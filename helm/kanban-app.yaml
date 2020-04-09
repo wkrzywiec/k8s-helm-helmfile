@@ -1,0 +1,12 @@
+app:
+  name: kanban-app
+  group: backend
+  replicaCount: 1
+  container:
+    image: wkrzywiec/kanban-app:k8s
+    port: 8080
+    config:
+      - name: postgres-config
+    env: 
+      - key: DB_SERVER
+        value: postgres

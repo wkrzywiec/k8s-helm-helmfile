@@ -5,6 +5,7 @@ app:
   container:
     image: add-image-here
     port: 8080
+    config: []
     env: 
       - key: key
         value: value

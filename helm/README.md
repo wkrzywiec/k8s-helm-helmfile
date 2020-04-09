@@ -90,11 +90,11 @@ $ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 
 ## Blueprint Helm Charts
 
-There are 3 types of Helm charts, which will be used to deploy all Kubernetes objects.
+Within this project there are 3 types of Helm charts, which will be used to deploy all Kubernetes objects.
 
 ### App Helm Chart
 
-This is a basic Helm chart, necessary to deploy applications (*adminer*, *kanban-ui* & *kanban-app*). In order to run those services in the Kubernetes cluster we need to create Deployment & Service for each one of them. This chart is taking care of that - it provides a template for doing that.
+This is a basic Helm chart, necessary to deploy applications (*adminer*, *kanban-ui* & *kanban-app*). In order to run those apps in the Kubernetes cluster we need to create Deployment & Service for each one of them. This chart is taking care of that - it provides a template for doing that.
 
 It was created with following command:
 ```bash
@@ -134,47 +134,31 @@ app:
 
 ### Postgres Helm chart
 
-### Ingress Helm Chart
+This chart is used to create a PostgreSQL database and includes 4 types of Kubernetes objects: Deployment, Service, PersistentVolumeClaim & ConfigMap. 
 
-First create an Umbrella Chart:
-```bash
-$ helm create helm
-Creating helm
+All templates and defualt `values.yaml` file is located in the `./postgres` folder:
 
-$ tree -a
-.
-├── charts
-├── Chart.yaml                      # A YAML file containing information about the chart
-├── .helmignore
-├── README.md
-├── templates
-│   ├── deployment.yaml
-│   ├── _helpers.tpl
-│   ├── ingress.yaml
-│   ├── NOTES.txt
-│   ├── serviceaccount.yaml
-│   ├── service.yaml
-│   └── tests
-│       └── test-connection.yaml
-└── values.yaml                     # The default configuration values for this chart
-```
-
-Clean folder to have only those files:
 ```bash
 .
 ├── charts
 ├── Chart.yaml
-├── README.md
+├── .helmignore
 ├── templates
-│   └── ingress.yaml
+│   ├── config.yaml
+│   ├── deployment.yaml
+│   ├── pvc.yaml
+│   └── service.yaml
 └── values.yaml
 ```
 
-Chart structure - https://helm.sh/docs/topics/charts/
+Similarly to previous example, in order to create all these objects you need to prepare your own YAML file, which follow the structure from `values.yaml`, like for example it's done in `kanban-postgress.yaml` file. 
 
-### Ingress
+### Ingress Helm Chart
 
-To `Chart.yaml` file add dependency:
+And the last chart, is responsible for creating and configurating Ingress Controller. 
+
+It creates the default backend service - marked as `dependency` in `Chart.yaml`:
+
 ```yaml
 dependencies:
   - name: nginx-ingress
@@ -182,78 +166,29 @@ dependencies:
     repository: https://kubernetes-charts.storage.googleapis.com/
 ```
 
-Then, you need to update the dependency (download packed chart):
-```bash
-./helm$ helm dependency update
-Hang tight while we grab the latest from your chart repositories...
-...Successfully got an update from the "cetic" chart repository
-...Successfully got an update from the "stable" chart repository
-Update Complete. ⎈Happy Helming!⎈
-Saving 1 charts
-Downloading nginx-ingress from repo https://kubernetes-charts.storage.googleapis.com/
-Deleting outdated charts
-```
+And the configuration of Ingress Controller is made by combination of `/templates/ingress.yaml` and `values.yaml`. If you want to change the routing you need to override values from relevant file.
 
-After that new file will show up in `/charts` folder - **nginx-ingress-1.36.0.tgz**.
 
-To install this dependency:
+### Kanban-app
+
 ```bash
-./helm$ helm install kanban .
-NAME: kanban
-LAST DEPLOYED: Tue Apr  7 07:04:18 2020
+$ helm install -f kanban-app.yaml kanban-app ./app
+NAME: kanban-app
+LAST DEPLOYED: Thu Apr  9 21:38:47 2020
 NAMESPACE: default
 STATUS: deployed
 REVISION: 1
 TEST SUITE: None
+
+$ helm upgrade -f ingress.yaml ingress ./ingress
+Release "ingress" has been upgraded. Happy Helming!
+NAME: ingress
+LAST DEPLOYED: Thu Apr  9 21:41:57 2020
+NAMESPACE: default
+STATUS: deployed
+REVISION: 2
+TEST SUITE: None
 ```
-
-And to check Deployments:
-```bash
-$ kubectl get deployments
-NAME                                   READY   UP-TO-DATE   AVAILABLE   AGE
-kanban-nginx-ingress-controller        1/1     1            1           108s
-kanban-nginx-ingress-default-backend   1/1     1            1           108s
-```
-
-### Common Chart
-
-[Helm Library Chart](https://helm.sh/docs/topics/library_charts/)
-
-Create a new common chart:
-```bash
-./helm/charts$ helm create app
-Creating app
-```
-
-Remove unnecessary files, so the folder structure looks as follows:
-```bash
-./helm$ tree
-
-.
-├── Chart.lock
-├── charts
-│   ├── app
-│   │   ├── charts
-│   │   ├── Chart.yaml
-│   │   ├── templates
-│   │   │   ├── deployment.yaml
-│   │   │   └── service.yaml
-│   │   └── values.yaml
-│   └── nginx-ingress-1.36.0.tgz
-├── Chart.yaml
-├── README.md
-├── templates
-│   └── ingress.yaml
-└── values.yaml
-```
-
-Rename `deployment.yaml` & `service.yaml` to be [Named Templates](https://helm.sh/docs/chart_template_guide/named_templates/) - `_deployment.yaml` & `_service.yaml` respectively. 
-
-
-
-### Adminer
-
-
 
 Reference
 =========
