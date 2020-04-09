@@ -19,5 +19,7 @@ postgres:
       storage: 4Gi
   config:
     name: postgres-config
-    data: []
+    data: 
+      - key: key
+        value: value
   

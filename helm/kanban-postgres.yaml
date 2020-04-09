@@ -1,8 +1,9 @@
-config:
-  data:
-    - key: POSTGRES_DB
-      value: kanban
-    - key: POSTGRES_USER
-      value: kanban
-    - key: POSTGRES_PASSWORD
-      value: kanban
+postgres:
+  config:
+    data:
+      - key: POSTGRES_DB
+        value: kanban
+      - key: POSTGRES_USER
+        value: kanban
+      - key: POSTGRES_PASSWORD
+        value: kanban

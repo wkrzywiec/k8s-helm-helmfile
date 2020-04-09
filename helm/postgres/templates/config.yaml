@@ -4,7 +4,8 @@ metadata:
   name: {{ .Values.postgres.config.name }}
   labels:
     group: {{ .Values.postgres.group }}
-data: {{- range .Values.postgres.config.data}}
-{{ .key }} : {{ .value }}
+data: 
+{{- range .Values.postgres.config.data }}
+  {{ .key }}: {{ .value }}
 {{- end}}
   
