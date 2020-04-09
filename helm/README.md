@@ -88,14 +88,53 @@ $ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 "stable" has been added to your repositories
 ```
 
-Add repository with Adminer:
+## Blueprint Helm Charts
+
+There are 3 types of Helm charts, which will be used to deploy all Kubernetes objects.
+
+### App Helm Chart
+
+This is a basic Helm chart, necessary to deploy applications (*adminer*, *kanban-ui* & *kanban-app*). In order to run those services in the Kubernetes cluster we need to create Deployment & Service for each one of them. This chart is taking care of that - it provides a template for doing that.
+
+It was created with following command:
 ```bash
-helm repo add cetic https://cetic.github.io/helm-charts
-"cetic" has been added to your repositories
+$ helm create app
+Creating app
 ```
 
+After cleaning the unncessary templates and adding files for Deployment & Service, the chart looks as follows:
+```bash
+.
+├── charts
+├── Chart.yaml
+├── .helmignore
+├── templates
+│   ├── deployment.yaml
+│   └── service.yaml
+└── values.yaml
+```
 
-### Helm Umbrella Chart
+In order to deploy specific application you need to create a YAML file which will override default default values located in the `values.yaml`:
+
+```yaml
+app:
+  name: app
+  group: app
+  replicaCount: 1
+  container:
+    image: add-image-here
+    port: 8080
+    env: 
+      - key: key
+        value: value
+  service:
+    type: ClusterIP
+    port: 8080
+```
+
+### Postgres Helm chart
+
+### Ingress Helm Chart
 
 First create an Umbrella Chart:
 ```bash
