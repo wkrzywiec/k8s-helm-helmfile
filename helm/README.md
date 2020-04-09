@@ -178,6 +178,8 @@ kanban-nginx-ingress-default-backend   1/1     1            1           108s
 
 ### Common Chart
 
+[Helm Library Chart](https://helm.sh/docs/topics/library_charts/)
+
 Create a new common chart:
 ```bash
 ./helm/charts$ helm create app
@@ -211,10 +213,6 @@ Rename `deployment.yaml` & `service.yaml` to be [Named Templates](https://helm.s
 
 
 ### Adminer
-
-helm install adminer cetic/adminer --version 0.1.3
-
-
 
 
 
