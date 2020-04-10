@@ -21,10 +21,14 @@ It contains 3 components:
 
 And here is a simpliefied schema of what I would like to achieve:
 
+![Simple Architecture Diagram](https://github.com/wkrzywiec/k8s-helm-helmfile/blob/master/assets/arch-simple.png)
+
 
 On it you there is an additional component - adminer. It's GUI application for managing the database.
 
 A full picture of Kubernetes cluster that is created with each approach is presented below:
+
+![Kubernetes Objects Architecture](https://github.com/wkrzywiec/k8s-helm-helmfile/blob/master/assets/arch-k8s.png)
 
 ## Prerequisites
 
