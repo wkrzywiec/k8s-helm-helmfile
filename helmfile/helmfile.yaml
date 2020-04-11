@@ -1,0 +1,29 @@
+repositories:
+  - name: stable
+    url: https://kubernetes-charts.storage.googleapis.com
+
+releases:
+  - name: postgres
+    chart: ./charts/postgres
+    values:
+      - ./values/kanban-postgres.yaml
+
+  - name: adminer
+    chart: ./charts/app
+    values:
+      - ./values/adminer.yaml
+
+  - name: kanban-app
+    chart: ./charts/app
+    values:
+      - ./values/kanban-app.yaml
+  
+  - name: kanban-ui
+    chart: ./charts/app
+    values:
+      - ./values/kanban-ui.yaml
+
+  - name: ingress
+    chart: ./charts/ingress
+    values:
+      - ./values/ingress.yaml
