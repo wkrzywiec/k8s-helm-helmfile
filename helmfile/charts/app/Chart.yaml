@@ -1,0 +1,15 @@
+apiVersion: v2
+name: app
+description: A Helm chart for any application
+type: application
+version: 0.1.0
+appVersion: 1.16.0
+keywords:
+  - app
+  - java
+  - javascript
+  - angular
+home: https://github.com/wkrzywiec/k8s-helm-helmfile/tree/master/helm
+maintainers:
+  - name: Wojtek Krzywiec
+    url: https://github.com/wkrzywiec

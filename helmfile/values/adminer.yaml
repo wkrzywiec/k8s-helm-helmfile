@@ -1,0 +1,11 @@
+app:
+  name: adminer
+  group: db
+  container:
+    image: adminer:4.7.6-standalone
+    port: 8080
+    env:
+      - key: ADMINER_DESIGN
+        value: pepa-linha
+      - key: ADMINER_DEFAULT_SERVER
+        value: postgres

@@ -14,12 +14,9 @@
 * [References](#References)
 
 
-Add postgres & adminer
-======================
+## Add postgres & adminer
 
-postgres
---------
-
+### postgres
 
 First create [**PeristentVolumeClaim**](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) using `postgres-pvc.yaml` file. And then apply it:
 ```bash
@@ -62,8 +59,8 @@ kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP    8m35s
 postgres     ClusterIP   10.109.98.250   <none>        5432/TCP   4m34s
 ```
 
-adminer 
--------
+### adminer 
+
 
 Postgres is set up (but it can't be accessable by any other service inside or outside cluster yet). So let's move on to **adminer**.
 
@@ -90,8 +87,8 @@ adminer    1/1     1            1           7m41s
 postgres   1/1     1            1           9m42s
 ```
 
-Add kanban 
-==========
+## Add kanban 
+
 
 First `kanban-app-deployment.yaml` file has beed created. Then inside a terminal use following command:
 ```bash
@@ -110,10 +107,8 @@ NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
 kanban-app-deployment   0/1     1            0           2m56s
 ```
 
-Add & config Ingress
-====================
-Add Ingress 
------------
+## Add & config Ingress
+### Add Ingress 
 
 To get inside the application you need to set up [**Ingress**](https://kubernetes.io/docs/concepts/services-networking/ingress/) which is a gateway to a cluster - the only way you can enter any application inside of it.
 
@@ -155,10 +150,9 @@ $ kubectl apply -f ingress-controller.yaml
 ingress.networking.k8s.io/ingress-controller created
 ```
 
-Testing application
-===================
-Adminer App
------------
+## Testing application
+### Adminer App
+
 
 It's available under the URL *http://adminer.k8s.com* and the credentials are:
 ```
@@ -187,16 +181,15 @@ spec:
               value: pepa-linha
 ```
 
-Kanban App
-----------
+### Kanban App
 
 The UI is available under the address *http://kanban.k8s.com*.
 
 If you want to connect directly to the backend you need to append above URL with */api/* prefix, e.g. *http://kanban.k8s.com/api/swagger-ui.html*.
 
 
-References
-==========
+## References
+
 
 * kubectl overview
 https://kubernetes.io/docs/reference/kubectl/overview/
