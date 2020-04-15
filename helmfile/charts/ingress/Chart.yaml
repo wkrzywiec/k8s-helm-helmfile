@@ -12,7 +12,3 @@ home: https://github.com/wkrzywiec/k8s-helm-helmfile/tree/master/helm
 maintainers:
   - name: Wojtek Krzywiec
     url: https://github.com/wkrzywiec
-dependencies:
-  - name: nginx-ingress
-    version: 1.36.0
-    repository: https://kubernetes-charts.storage.googleapis.com/

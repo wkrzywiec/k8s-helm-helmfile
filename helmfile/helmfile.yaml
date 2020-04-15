@@ -23,7 +23,11 @@ releases:
     values:
       - ./values/kanban-ui.yaml
 
-  - name: ingress
+  - name: ingress-backend
+    chart: stable/nginx-ingress
+    version: 1.36.0
+
+  - name: ingress-controller
     chart: ./charts/ingress
     values:
       - ./values/ingress.yaml
