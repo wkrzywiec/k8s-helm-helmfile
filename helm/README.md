@@ -110,6 +110,18 @@ dependencies:
 
 And the configuration of Ingress Controller, which is made by combining of `/templates/ingress.yaml` and `values.yaml`. If you want to change the routing you need to override values from relevant file.
 
+In order to download that dependency use the command:
+
+```
+$ helm dependency update ./ingress/
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "stable" chart repository
+Update Complete. ⎈Happy Helming!⎈
+Saving 1 charts
+Downloading nginx-ingress from repo https://kubernetes-charts.storage.googleapis.com/
+Deleting outdated charts
+```
+
 ## Create helm releases
 
 Here is the list of commands that needs to be executed to deploy applications on the cluster. 
@@ -298,12 +310,12 @@ Use "helm [command] --help" for more information about a command.
 
 ## References
 
-https://helm.sh/docs/intro/quickstart/
-https://github.com/alexellis/helm3-expressjs-tutorial
-https://www.civo.com/learn/guide-to-helm-3-with-an-express-js-microservice
-https://codefresh.io/docs/docs/new-helm/helm-best-practices/
-https://akomljen.com/package-kubernetes-applications-with-helm/
-https://itnext.io/drastically-improve-your-kubernetes-deployments-with-helm-5323e7f11ef8
-https://www.reddit.com/r/kubernetes/comments/8x3znr/deploying_multiple_similar_applications_with_helm/e20vwfc/
-https://www.reddit.com/r/kubernetes/comments/80hmaj/helm_at_reddit_from_local_dev_staging_to/
+* [Helm official docs - Quickstart](https://helm.sh/docs/intro/quickstart/)
+* [Helm 3 Example Project](https://github.com/alexellis/helm3-expressjs-tutorial)
+* [Helm 3 Example Project - blog post](https://www.civo.com/learn/guide-to-helm-3-with-an-express-js-microservice)
+* [Helm Best Practices](https://codefresh.io/docs/docs/new-helm/helm-best-practices/)
+* [Package Kubernetes Applications with Helm](https://akomljen.com/package-kubernetes-applications-with-helm/)
+* [Drastically Improve your Kubernetes Deployments with Helm](https://itnext.io/drastically-improve-your-kubernetes-deployments-with-helm-5323e7f11ef8)
+* [reddit - Deploying multiple similar applications with helm?](https://www.reddit.com/r/kubernetes/comments/8x3znr/deploying_multiple_similar_applications_with_helm/e20vwfc/)
+* [reddit - Helm at Reddit: from local dev, staging, to production](https://www.reddit.com/r/kubernetes/comments/80hmaj/helm_at_reddit_from_local_dev_staging_to/)
 
