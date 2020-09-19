@@ -121,6 +121,12 @@ $ minikube dashboard
 🎉  Opening http://127.0.0.1:45807/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
 ```
 
+To see a resource (CPU, memory) consumption of services you can enable *metrics-server* minikube addon (they will be visible on a dashboard):
+```bash
+$ minikube addons enable metrics-server
+🌟  The 'metrics-server' addon is enabled
+```
+
 If your pod is not starting properly you can investigate it by **describe pods <pod-name>** command:
 ```bash
 $ kubectl describe pods postgres-6fd67d4976-ljd2j
