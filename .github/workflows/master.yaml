@@ -21,8 +21,7 @@ jobs:
 
       - name: Debug
         run: |
-          cd ./helm/app
-          ls
+          printenv DATREE_TOKEN
 
       - name: Datree test
         run: |
