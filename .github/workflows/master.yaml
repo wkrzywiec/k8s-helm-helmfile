@@ -23,5 +23,5 @@ jobs:
         env:
           DATREE_TOKEN: ${{ secrets.DATREE_TOKEN }}
         run: |
-          helm datree test ./helm/app -- --values kanban-app.yaml
+          helm datree test ./helm/app -- --values ./helm/kanban-app.yaml
 
