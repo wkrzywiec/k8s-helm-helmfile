@@ -6,7 +6,7 @@ metadata:
     app: {{ .Values.app.name }}
     group: {{ .Values.app.group }}
 spec:
-  [replicas: {{ .Values.app.replicaCount }}
+  replicas: {{ .Values.app.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Values.app.name }}
