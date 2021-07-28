@@ -19,6 +19,10 @@ jobs:
         run: |
           helm plugin install https://github.com/datreeio/helm-datree
 
+      - name: Debug
+        run: |
+          ls
+
       - name: Datree test
         run: |
           helm datree test ./helm/app -- --values kanban-app.yaml
