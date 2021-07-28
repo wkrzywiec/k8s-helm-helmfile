@@ -1,0 +1,26 @@
+name: Quality check
+on:
+  push:
+    branches:
+      - 'master'
+      - 'ci'
+
+jobs:
+  datree:
+    name: Validate Helm charts
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Install Datree
+        uses: WyriHaximus/github-action-helm3@v2
+        with:
+          exec: helm plugin install https://github.com/datreeio/helm-datree
+
+      - name: Datree test
+        uses: WyriHaximus/github-action-helm3@v2
+        with:
+          token: ${{ secrets.DATREE_TOKEN }}
+          exec: helm datree test ./helm/app -- --values kanban-app.yaml
+
