@@ -21,6 +21,7 @@ jobs:
 
       - name: Debug
         run: |
+          cd ./helm/app
           ls
 
       - name: Datree test
