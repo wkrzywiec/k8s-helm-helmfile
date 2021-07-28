@@ -10,7 +10,7 @@ jobs:
     name: Validate Helm charts
     runs-on: 'ubuntu-latest'
     container:
-      image: alpine/helm:3.6.3
+      image: dtzar/helm-kubectl:3.6.3
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
