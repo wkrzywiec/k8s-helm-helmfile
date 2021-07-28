@@ -18,7 +18,7 @@ jobs:
       - name: YAML Lint
         uses: ibiqlik/action-yamllint@v3
         with:
-          file_or_dir: /helm
+          file_or_dir: /helm/**
 
       - name: Install Datree
         run: |
