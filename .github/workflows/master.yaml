@@ -19,10 +19,6 @@ jobs:
         run: |
           helm plugin install https://github.com/datreeio/helm-datree
 
-      # - name: Debug
-      #   run: |
-      #     printenv DATREE_TOKEN
-
       - name: Datree test
         env:
           DATREE_TOKEN: ${{ secrets.DATREE_TOKEN }}
