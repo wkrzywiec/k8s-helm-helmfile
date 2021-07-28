@@ -24,6 +24,8 @@ jobs:
           printenv DATREE_TOKEN
 
       - name: Datree test
+        env:
+          DATREE_TOKEN: ${{ secrets.DATREE_TOKEN }}
         run: |
           helm datree test ./helm/app -- --values kanban-app.yaml
 
