@@ -15,18 +15,6 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
 
-      - name: Lint and Annotate
-        uses: staffbase/yamllint-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ## The target path is processed recursively
-          target-path: ./helm
-
-      # - name: YAML Lint
-      #   uses: ibiqlik/action-yamllint@v3
-      #   with:
-      #     file_or_dir: /helm/**
-
       - name: Install Datree
         run: |
           helm plugin install https://github.com/datreeio/helm-datree
