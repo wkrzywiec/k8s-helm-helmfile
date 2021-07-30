@@ -55,18 +55,14 @@ jobs:
           location: ${{ env.GKE_REGION }}
           credentials: ${{ secrets.GKE_SA_KEY }}
 
-      - name: Check Pods
-        run: |
-          kubectl get pods
-
       - name: Deploy Helm release
         uses: deliverybot/helm@v1
         with:
-          release: kanban-ui
+          release: adminer
           namespace: default
           chart: ./helm/app
           helm: helm3
-          value-files: ./helm/kanban-ui.yaml
+          value-files: ./helm/adminer.yaml
 
       # - name: Delete cluster GKE Cluster
       #   if: ${{ always() }}
