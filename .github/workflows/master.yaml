@@ -48,6 +48,30 @@ jobs:
         run: |
           gcloud container clusters create-auto ${{ env.GKE_CLUSTER }} --project=${{ env.PROJECT_ID }} --region=${{ env.GKE_REGION }}
 
-      - name: Delete cluster
+      - name: Config kubectl for GKE cluster
+        uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_REGION }}
+          credentials: ${{ secrets.GKE_SA_KEY }}
+
+      - name: Check Pods
+        run: |
+          kubectl get pods
+
+      - name: Deploy Helm release
+        uses: deliverybot/helm@v1
+        with:
+          release: kanban-ui
+          namespace: default
+          chart: ./helm/app
+          helm: helm3
+          value-files: >-
+          [
+            "./helm/kanban-ui.yaml"
+          ]
+
+      - name: Delete cluster GKE Cluster
+        if: ${{ always() }}
         run: |
           gcloud container clusters delete ${{ env.GKE_CLUSTER }} --zone=${{ env.GKE_REGION }} --quiet
