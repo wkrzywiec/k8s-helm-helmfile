@@ -8,7 +8,7 @@ on:
 jobs:
   datree:
     name: Validate Helm charts
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     container:
       image: dtzar/helm-kubectl:3.6.3
     steps:
@@ -25,3 +25,31 @@ jobs:
         run: |
           helm datree test ./helm/app -- --values ./helm/kanban-app.yaml
 
+  gke:
+    name: Test Helm chart on GKE
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_ID: k8s-helm-helmfile
+      GKE_CLUSTER: helm-test
+      GKE_REGION: europe-central2
+    steps:
+      
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
+        with:
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Create Autopilot GKE cluster
+        run: |
+          gcloud container clusters create-auto ${{ env.GKE_CLUSTER }} \
+	          --project=${{ env.PROJECT_ID }} \
+	          --region=${{ env.GKE_REGION }}
+
+      - name: Delete cluster
+        run: |
+          cloud container clusters delete ${{ env.GKE_CLUSTER }}
+            --zone=${{ env.GKE_REGION }}
