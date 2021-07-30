@@ -50,4 +50,4 @@ jobs:
 
       - name: Delete cluster
         run: |
-          cloud container clusters delete ${{ env.GKE_CLUSTER }} --zone=${{ env.GKE_REGION }}
+          gcloud container clusters delete ${{ env.GKE_CLUSTER }} --zone=${{ env.GKE_REGION }} --quite
