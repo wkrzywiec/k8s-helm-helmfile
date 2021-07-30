@@ -47,9 +47,9 @@ jobs:
         run: |
           gcloud container clusters create-auto ${{ env.GKE_CLUSTER }} \
 	          --project=${{ env.PROJECT_ID }} \
-	          --region=${{ env.GKE_REGION }}
+	          --region=${{ env.GKE_REGION }} \
 
       - name: Delete cluster
         run: |
-          cloud container clusters delete ${{ env.GKE_CLUSTER }}
-            --zone=${{ env.GKE_REGION }}
+          cloud container clusters delete ${{ env.GKE_CLUSTER }} \
+            --zone=${{ env.GKE_REGION }} \
