@@ -64,6 +64,10 @@ jobs:
           helm: helm3
           value-files: ./helm/adminer.yaml
 
+      - name: Get Service IP
+        run: |
+          kubectl describe services adminer
+
       # - name: Delete cluster GKE Cluster
       #   if: ${{ always() }}
       #   run: |
