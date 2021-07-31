@@ -66,9 +66,9 @@ jobs:
 
       - name: Get Service IP
         run: |
-          export IP_ADDRESS = $(kubectl get services -o=jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}')
-          echo $IP_ADDRESS
-          curl http://$IP_ADDRESS:8080
+          export IP_ADDRESS=$(kubectl get services -o=jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}')
+          echo "$IP_ADDRESS"
+          curl http://"$IP_ADDRESS":8080
 
       # - name: Delete cluster GKE Cluster
       #   if: ${{ always() }}
