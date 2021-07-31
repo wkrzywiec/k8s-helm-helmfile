@@ -44,9 +44,9 @@ jobs:
           service_account_key: ${{ secrets.GKE_SA_KEY }}
           project_id: ${{ env.PROJECT_ID }}
 
-      # - name: Create Autopilot GKE cluster
-      #   run: |
-      #     gcloud container clusters create-auto ${{ env.GKE_CLUSTER }} --project=${{ env.PROJECT_ID }} --region=${{ env.GKE_REGION }}
+      - name: Create Autopilot GKE cluster
+        run: |
+          gcloud container clusters create-auto ${{ env.GKE_CLUSTER }} --project=${{ env.PROJECT_ID }} --region=${{ env.GKE_REGION }}
 
       - name: Config kubectl for GKE cluster
         uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
@@ -55,14 +55,14 @@ jobs:
           location: ${{ env.GKE_REGION }}
           credentials: ${{ secrets.GKE_SA_KEY }}
 
-      # - name: Deploy Helm release
-      #   uses: deliverybot/helm@v1
-      #   with:
-      #     release: adminer
-      #     namespace: default
-      #     chart: ./helm/app
-      #     helm: helm3
-      #     value-files: ./helm/adminer.yaml
+      - name: Deploy Helm release
+        uses: deliverybot/helm@v1
+        with:
+          release: adminer
+          namespace: default
+          chart: ./helm/app
+          helm: helm3
+          value-files: ./helm/adminer.yaml
 
       - name: Get Service IP
         run: |
@@ -70,7 +70,7 @@ jobs:
           echo "$IP_ADDRESS"
           curl http://"$IP_ADDRESS":8080
 
-      # - name: Delete cluster GKE Cluster
-      #   if: ${{ always() }}
-      #   run: |
-      #     gcloud container clusters delete ${{ env.GKE_CLUSTER }} --zone=${{ env.GKE_REGION }} --quiet
+      - name: Delete cluster GKE Cluster
+        if: ${{ always() }}
+        run: |
+          gcloud container clusters delete ${{ env.GKE_CLUSTER }} --zone=${{ env.GKE_REGION }} --quiet
