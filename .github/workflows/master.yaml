@@ -66,7 +66,7 @@ jobs:
 
       - name: Get Service IP
         run: |
-          kubectl get services -o json
+          kubectl get services -o=jsonpath='{.items[0].status.loadBalancer[0].ip}'
 
       # - name: Delete cluster GKE Cluster
       #   if: ${{ always() }}
