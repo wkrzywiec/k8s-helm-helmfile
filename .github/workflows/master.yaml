@@ -1,0 +1,79 @@
+name: Quality check
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  datree:
+    name: Validate Helm charts
+    runs-on: ubuntu-latest
+    container:
+      image: dtzar/helm-kubectl:3.6.3
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Install Datree 🔨
+        run: |
+          helm plugin install https://github.com/datreeio/helm-datree
+
+      - name: Datree test 🔥
+        env:
+          DATREE_TOKEN: ${{ secrets.DATREE_TOKEN }}
+        run: |
+          helm datree test ./helm/app -- --values ./helm/kanban-app.yaml
+
+  gke:
+    name: Test Helm chart on GKE 
+    needs: datree
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_ID: k8s-helm-helmfile
+      GKE_CLUSTER: helm-test
+      GKE_REGION: europe-central2
+    steps:
+      
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Setup gcloud CLI ⚡
+        uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
+        with:
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Create Autopilot GKE cluster 🔨
+        run: |
+          gcloud container clusters create-auto ${{ env.GKE_CLUSTER }} --project=${{ env.PROJECT_ID }} --region=${{ env.GKE_REGION }}
+
+      - name: Config kubectl for GKE cluster ⚡
+        uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_REGION }}
+          credentials: ${{ secrets.GKE_SA_KEY }}
+
+      - name: Deploy test Helm release 🚀
+        uses: deliverybot/helm@v1
+        with:
+          release: adminer
+          namespace: default
+          chart: ./helm/app
+          helm: helm3
+          value-files: ./helm/adminer.yaml
+          values: |
+            app:
+              service:
+                type: LoadBalancer
+
+      - name: Test installed application 🔥
+        run: |
+          export IP_ADDRESS=$(kubectl get services -o=jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}')
+          echo "$IP_ADDRESS"
+          curl http://"$IP_ADDRESS":8080
+
+      - name: Delete cluster GKE Cluster 💥
+        if: ${{ always() }}
+        run: |
+          gcloud container clusters delete ${{ env.GKE_CLUSTER }} --zone=${{ env.GKE_REGION }} --quiet
