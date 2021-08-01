@@ -1,8 +1,6 @@
 app:
   name: adminer
   group: db
-  service:
-    type: LoadBalancer
   container:
     image: adminer:4.7.6-standalone
     port: 8080
