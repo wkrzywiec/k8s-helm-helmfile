@@ -4,9 +4,9 @@ on:
     branches:
       - 'master'
 
-defaults:
-  run:
-    working-directory: 'helm'
+# defaults:
+#   run:
+#     working-directory: 'helm'
 
 jobs:
   # datree:
@@ -36,6 +36,9 @@ jobs:
       PROJECT_ID: k8s-helm-helmfile
       GKE_CLUSTER: helm-test
       GKE_REGION: europe-central2
+    defaults:
+      run:
+        working-directory: 'helm'
     steps:
       
       - name: Checkout 🛎️
