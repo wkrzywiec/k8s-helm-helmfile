@@ -4,33 +4,29 @@ on:
     branches:
       - 'master'
 
-# defaults:
-#   run:
-#     working-directory: 'helm'
-
 jobs:
-  # datree:
-  #   name: Validate Helm charts
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: dtzar/helm-kubectl:3.6.3
-  #   steps:
-  #     - name: Checkout 🛎️
-  #       uses: actions/checkout@v2
+  datree:
+    name: Validate Helm charts
+    runs-on: ubuntu-latest
+    container:
+      image: dtzar/helm-kubectl:3.6.3
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
 
-  #     - name: Install Datree 🔨
-  #       run: |
-  #         helm plugin install https://github.com/datreeio/helm-datree
+      - name: Install Datree 🔨
+        run: |
+          helm plugin install https://github.com/datreeio/helm-datree
 
-  #     - name: Datree test 🔥
-  #       env:
-  #         DATREE_TOKEN: ${{ secrets.DATREE_TOKEN }}
-  #       run: |
-  #         helm datree test ./app -- --values ./adminer.yaml
+      - name: Datree test 🔥
+        env:
+          DATREE_TOKEN: ${{ secrets.DATREE_TOKEN }}
+        run: |
+          helm datree test ./helm/app -- --values ./helm/adminer.yaml
 
   gke:
     name: Test Helm chart on GKE 
-    # needs: datree
+    needs: datree
     runs-on: ubuntu-latest
     env:
       PROJECT_ID: k8s-helm-helmfile
