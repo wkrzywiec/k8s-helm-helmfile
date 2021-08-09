@@ -30,7 +30,7 @@ jobs:
 
   gke:
     name: Test Helm chart on GKE 
-    needs: datree
+    # needs: datree
     runs-on: ubuntu-latest
     env:
       PROJECT_ID: k8s-helm-helmfile
