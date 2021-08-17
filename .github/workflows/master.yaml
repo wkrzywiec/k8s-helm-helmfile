@@ -24,56 +24,56 @@ jobs:
         run: |
           helm datree test ./helm/app -- --values ./helm/adminer.yaml
 
-  gke:
-    name: Test Helm chart on GKE 
-    needs: datree
-    runs-on: ubuntu-latest
-    env:
-      PROJECT_ID: k8s-helm-helmfile
-      GKE_CLUSTER: helm-test
-      GKE_REGION: europe-central2
-    steps:
+#   gke:
+#     name: Test Helm chart on GKE 
+#     needs: datree
+#     runs-on: ubuntu-latest
+#     env:
+#       PROJECT_ID: k8s-helm-helmfile
+#       GKE_CLUSTER: helm-test
+#       GKE_REGION: europe-central2
+#     steps:
       
-      - name: Checkout 🛎️
-        uses: actions/checkout@v2
+#       - name: Checkout 🛎️
+#         uses: actions/checkout@v2
 
-      - name: Setup gcloud CLI ⚡
-        uses: google-github-actions/setup-gcloud@master
-        with:
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
-          project_id: ${{ env.PROJECT_ID }}
+#       - name: Setup gcloud CLI ⚡
+#         uses: google-github-actions/setup-gcloud@master
+#         with:
+#           service_account_key: ${{ secrets.GKE_SA_KEY }}
+#           project_id: ${{ env.PROJECT_ID }}
 
-      - name: Create Autopilot GKE cluster 🔨
-        run: |
-          gcloud container clusters create-auto ${{ env.GKE_CLUSTER }} --project=${{ env.PROJECT_ID }} --region=${{ env.GKE_REGION }}
+#       - name: Create Autopilot GKE cluster 🔨
+#         run: |
+#           gcloud container clusters create-auto ${{ env.GKE_CLUSTER }} --project=${{ env.PROJECT_ID }} --region=${{ env.GKE_REGION }}
 
-      - name: Config kubectl for GKE cluster ⚡
-        uses: google-github-actions/get-gke-credentials@main
-        with:
-          cluster_name: ${{ env.GKE_CLUSTER }}
-          location: ${{ env.GKE_REGION }}
-          credentials: ${{ secrets.GKE_SA_KEY }}
+#       - name: Config kubectl for GKE cluster ⚡
+#         uses: google-github-actions/get-gke-credentials@main
+#         with:
+#           cluster_name: ${{ env.GKE_CLUSTER }}
+#           location: ${{ env.GKE_REGION }}
+#           credentials: ${{ secrets.GKE_SA_KEY }}
 
-      - name: Deploy test Helm release 🚀
-        uses: deliverybot/helm@v1
-        with:
-          release: adminer
-          namespace: default
-          chart: ./helm/app
-          helm: helm3
-          value-files: ./helm/adminer.yaml
-          values: |
-            app:
-              service:
-                type: LoadBalancer
+#       - name: Deploy test Helm release 🚀
+#         uses: deliverybot/helm@v1
+#         with:
+#           release: adminer
+#           namespace: default
+#           chart: ./helm/app
+#           helm: helm3
+#           value-files: ./helm/adminer.yaml
+#           values: |
+#             app:
+#               service:
+#                 type: LoadBalancer
 
-      - name: Test installed application 🔥
-        run: |
-          export IP_ADDRESS=$(kubectl get services -o=jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}')
-          echo "$IP_ADDRESS"
-          curl http://"$IP_ADDRESS":8080
+#       - name: Test installed application 🔥
+#         run: |
+#           export IP_ADDRESS=$(kubectl get services -o=jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}')
+#           echo "$IP_ADDRESS"
+#           curl http://"$IP_ADDRESS":8080
 
-      - name: Delete cluster GKE Cluster 💥
-        if: ${{ always() }}
-        run: |
-          gcloud container clusters delete ${{ env.GKE_CLUSTER }} --zone=${{ env.GKE_REGION }} --quiet
+#       - name: Delete cluster GKE Cluster 💥
+#         if: ${{ always() }}
+#         run: |
+#           gcloud container clusters delete ${{ env.GKE_CLUSTER }} --zone=${{ env.GKE_REGION }} --quiet
