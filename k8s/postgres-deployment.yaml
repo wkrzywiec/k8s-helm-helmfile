@@ -31,3 +31,7 @@ spec:
           volumeMounts:              # indicates which Volume (from spec.template.spec.volumes) should be used
             - name: postgres-storage   # name of the Volume
               mountPath: /var/lib/postgresql/data   # path inside the container
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"

@@ -119,7 +119,7 @@ Article about *Ingress*: https://www.joyfulbikeshedding.com/blog/2018-03-26-stud
 Accordingly to an [official website documentation](https://kubernetes.github.io/ingress-nginx/deploy/) first we need to run following command in order to install *Ingress*:
 
 ```bash
-$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.2.0/deploy/static/provider/cloud/deploy.yaml
 namespace/ingress-nginx created
 configmap/nginx-configuration created
 configmap/tcp-services created
