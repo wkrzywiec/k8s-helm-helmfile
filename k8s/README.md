@@ -1,17 +1,19 @@
 # Kubernetes Deployment
 
 ### Table of contents 
-* [Add postgres & adminer](#Add-postgres-&-adminer)
-  * [postgres](#postgres)
-  * [adminer](#adminer)
-* [Add kanban](#Add-kanban)
-* [Add & config Ingress](#Add-&-config-Ingress)
-  * [Add Ingress](#Add-Ingress) 
-  * [Routing config of Ingress Controller](#Routing-config-of-Ingress-Controller)
-* [Testing application](#Testing-application)
-  * [Adminer App](#Adminer-App)
-  * [Kanban App](#Kanban-App)
-* [References](#References)
+- [Kubernetes Deployment](#kubernetes-deployment)
+    - [Table of contents](#table-of-contents)
+  - [Add postgres & adminer](#add-postgres--adminer)
+    - [postgres](#postgres)
+    - [adminer](#adminer)
+  - [Add kanban](#add-kanban)
+  - [Add & config Ingress](#add--config-ingress)
+    - [Add Ingress](#add-ingress)
+      - [Routing config of Ingress Controller](#routing-config-of-ingress-controller)
+  - [Testing application](#testing-application)
+    - [Adminer App](#adminer-app)
+    - [Kanban App](#kanban-app)
+  - [References](#references)
 
 
 ## Add postgres & adminer
@@ -110,44 +112,19 @@ kanban-app-deployment   0/1     1            0           2m56s
 ## Add & config Ingress
 ### Add Ingress 
 
-To get inside the application you need to set up [**Ingress**](https://kubernetes.io/docs/concepts/services-networking/ingress/) which is a gateway to a cluster - the only way you can enter any application inside of it.
-
-Community implementation of *Ingress*: https://github.com/kubernetes/ingress-nginx
-
-Article about *Ingress*: https://www.joyfulbikeshedding.com/blog/2018-03-26-studying-the-kubernetes-ingress-system.html
-
-Accordingly to an [official website documentation](https://kubernetes.github.io/ingress-nginx/deploy/) first we need to run following command in order to install *Ingress*:
-
-```bash
-$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
-namespace/ingress-nginx created
-configmap/nginx-configuration created
-configmap/tcp-services created
-configmap/udp-services created
-serviceaccount/nginx-ingress-serviceaccount created
-clusterrole.rbac.authorization.k8s.io/nginx-ingress-clusterrole created
-role.rbac.authorization.k8s.io/nginx-ingress-role created
-rolebinding.rbac.authorization.k8s.io/nginx-ingress-role-nisa-binding created
-clusterrolebinding.rbac.authorization.k8s.io/nginx-ingress-clusterrole-nisa-binding created
-deployment.apps/nginx-ingress-controller created
-limitrange/ingress-nginx created
-```
-
-For simplicity, I've downloaded above file and save it as *ingress-nginx.yaml*.
-
-Next, we need to run another command to enable *Ingress* addon:
-```bash
-$ minikube addons enable ingress
-🌟  The 'ingress' addon is enabled
-```
-
-Routing config of Ingress Controller
-------------------------------------
+#### Routing config of Ingress Controller
 
 Now we need to set up some routing rules for *Ingress* controller. Therefore the `ingress-controller.yaml` file has been created and applied:
+
 ```bash
 $ kubectl apply -f ingress-controller.yaml
 ingress.networking.k8s.io/ingress-controller created
+```
+
+To enter either adminer or kanaban app run following command:
+
+```
+minikube tunnel
 ```
 
 ## Testing application

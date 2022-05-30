@@ -21,3 +21,7 @@ spec:
           image: wkrzywiec/kanban-ui:k8s
           ports:
             - containerPort: 80
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
